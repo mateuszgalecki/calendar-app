@@ -1,17 +1,9 @@
 
 //<REACT
 import React, { Component } from 'react';
-import CreateAccount from './Components/CreateAccount';
-import LogIn from './Components/LogIn';
-import Welcome from './Components/Welcome';
 import ScreenRender from './Components/ScreenRender';
 //REACT/>
-//<REDUX
-// import { createSlice } from '@reduxjs/toolkit';
-// import { Provider } from 'react-redux';
-// import actionsObject from './index';
-import { useSelector } from 'react-redux';
-//REDUX/>
+
 //<FIREBASE
 import * as firebase from "firebase/app";
 import "firebase/analytics";
@@ -28,23 +20,6 @@ const db = firebase.firestore();
 //FIREBASE/>
 
 
-//REDUX LOGIC
-//CREATING STATE FOR ACTIVE SCREEN MANAGEMENT
-
-
-// const screenSlice = createSlice({
-//       name: 'screen',
-//       initialState: 'welcome',
-//       reducers: {
-//         app: state => state = 'app',
-//         logIn: state => state = 'logIn',
-//         signIn: state => state = 'signIn'
-//       }
-//     })
-
-//     const store = configureStore({
-//       reducer: screenSlice.reducer
-//     })
 
 //APP COMPONENT
 
@@ -52,12 +27,45 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: ''
+      user: '',
+      reservations: ''
     }
   }
 
   componentDidMount() {
     console.log('mounted');
+
+    //GETTING ALL THE RESERVATIONS FROM FIREBASE
+    db.collection('reservations').get().then((querySnapshot) => {
+      let reservations = [];
+      querySnapshot.forEach((doc) => {
+        let reservation = {
+          date: doc.id,
+          info: doc.data()
+        }
+        reservations.push(reservation);
+      })
+      this.setState({
+        reservations: reservations
+      }, () => {
+        console.log(this.state.reservations);
+      })
+    }).catch((error) => {
+      console.log(error);
+    })
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user);
+        this.setState({
+          user: user
+        })
+      } else {
+        console.log('woooooooooo');
+      }
+    });
+
+
   }
 
   logIn = (email, password) => {
@@ -77,20 +85,18 @@ class App extends Component {
       console.log(errorCode, errorMessage);
     });
 
-    // let user = firebase.auth().currentUser;
-    // if (user) {
-    //   console.log(user.email);
-    // } else {
-    //   console.log(`ain't no user`)
-    // }
+    let user = firebase.auth().currentUser;
+    if (user) {
+      console.log(user.email);
+    } else {
+      console.log(`ain't no user`)
+    }
   }
 
   render() {
     return(
     <div className="App">
-      <Welcome/>
-      <CreateAccount createANewAccount={this.createANewAccount}/>
-      <LogIn logIn={this.logIn}/>
+      <ScreenRender user={this.state.user} createANewAccount={this.createANewAccount} logIn={this.logIn}/>
     </div>
     );
   }

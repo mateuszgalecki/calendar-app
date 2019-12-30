@@ -10,10 +10,13 @@ class LogIn extends Component {
         }
     }
 
+
+
+
     handleSubmit(e) {
         e.preventDefault();
         console.log(this.state.email, this.state.password)
-        this.props.createANewAccount(this.state.email, this.state.password);
+        // this.props.createANewAccount(this.state.email, this.state.password);
     }
 
     handleEmailChange = (e) => {
@@ -30,13 +33,13 @@ class LogIn extends Component {
 
     render() {
         return(
-            <section className='onTheRight fullScreen primaryView'>
+            <section className={this.props.showMe === 'logIn' ? 'onTheLeft fullScreen primaryView slideRight' : 'onTheLeft fullScreen primaryView'}>
                 <form className='primaryView' onSubmit={this.handleSubmit.bind(this)}>
                     <input onChange={this.handleEmailChange} value={this.state.email} type='email' placeholder='email'></input>
                     <input onChange={this.handlePasswordChange} value={this.state.password} type='text' placeholder='password' className='pushUp'></input>
                     <input type='submit' value='log in' className='pushUp'></input>
                 </form>
-                <p></p>
+                <button onClick={this.props.goBack}>back</button>
             </section>
         )
     }
