@@ -6,7 +6,7 @@ import ScreenRender from './Components/ScreenRender';
 
 //<REDUX
 import { useSelector, useDispatch } from 'react-redux';
-import { actionsFunction } from '../index';
+import { actionsFunction } from './index';
 //REDUX/>
 
 //<FIREBASE
@@ -29,25 +29,45 @@ const db = firebase.firestore();
 //APP COMPONENT
 
 
-const App = function() {
+const AppFunc = function() {
 
     console.log('mounted');
 
     const dispatch = useDispatch();
-    const addAReservation = actionsFunction().reservationsActions.addAReservation;
+    let user = useSelector(state => state.user).email;
+    const setAllReservations = actionsFunction().reservationsActions.stateTheState;
     const setAUser = actionsFunction().userActions.setAUser;
     const unsetAUser = actionsFunction().userActions.unsetAUser;
+    const calendarAction = actionsFunction().screenActions.calendar;
+    const welcomeAction = actionsFunction().screenActions.welcome;
+
+
+    //FUNCTION TO SHOW THE CALENDAR SCREEN
+    const showCalendar = () => {
+      dispatch(calendarAction());
+      console.log('hello, calendar');
+      let checkIfLoggedIn = setTimeout(() => {
+        if (user.email === '') {
+          dispatch(welcomeAction());
+          console.log('no such user')
+        } else {
+          console.log('user succesfully logged and will stay that way');
+        }
+      }, 5000);
+  }
 
 
     //GETTING ALL THE RESERVATIONS FROM FIREBASE
     db.collection('reservations').get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        let reservation = {
-          date: doc.id,
-          info: doc.data()
+        let reservations = [];
+        querySnapshot.forEach((doc) => {
+            let reservation = {
+                date: doc.id,
+                info: doc.data()
         }
-        dispatch(addAReservation(reservation));
+        reservations.push(reservation);
       })
+      dispatch(setAllReservations(reservations));
     }).catch((error) => {
       console.log(error);
     })
@@ -55,8 +75,8 @@ const App = function() {
     //SETTIN A LISTENER ON THE AUTH OBJECT TO MONITOR IF A USER IS LOGGED IN
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-          console.log(user);
-          dispatch(setAUser(user));
+          console.log(user.email);
+          dispatch(setAUser(user.email));
         } else {
           console.log('woooooooooo');
           dispatch(unsetAUser());
@@ -64,103 +84,36 @@ const App = function() {
     });
 
     // HANDLING LOGGING IN
-    logIn = (email, password) => {
+    const logIn = (email, password) => {
         console.log('logInAcc');
         firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
           let errorCode = error.code;
-          let errorMessage = error.message;
-          console.log(errorCode, errorMessage);
+          console.log(errorCode);
+          //auth/user-not-found
+          if (errorCode === 'auth/user-not-found') {
+            console.log('user does not exist');
+          }
         });
+        showCalendar();
     }
     
     //HANDLING CREATING A NEW ACCOUNT
-    createANewAccount = (email, password) => {
+    const createANewAccount = (email, password) => {
         console.log('createAcc');
         firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
           let errorCode = error.code;
           let errorMessage = error.message;
           console.log(errorCode, errorMessage);
         });
+        showCalendar();
     }
 
     
     return(
     <div className="App">
-        <ScreenRender user={this.state.user} createANewAccount={this.createANewAccount} logIn={this.logIn}/>
+        <ScreenRender showCalendar={showCalendar} createANewAccount={createANewAccount} logIn={logIn}/>
     </div>
     );
 }
 
-export default App;
-
-// class App extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       user: '',
-//       reservations: ''
-//     }
-//   }
-
-//   componentDidMount() {
-//     console.log('mounted');
-
-//     //GETTING ALL THE RESERVATIONS FROM FIREBASE
-//     db.collection('reservations').get().then((querySnapshot) => {
-//       let reservations = [];
-//       querySnapshot.forEach((doc) => {
-//         let reservation = {
-//           date: doc.id,
-//           info: doc.data()
-//         }
-//         reservations.push(reservation);
-//       })
-//       this.setState({
-//         reservations: reservations
-//       }, () => {
-//         console.log(this.state.reservations);
-//       })
-//     }).catch((error) => {
-//       console.log(error);
-//     })
-
-//     firebase.auth().onAuthStateChanged((user) => {
-//       if (user) {
-//         console.log(user);
-//         this.setState({
-//           user: user
-//         })
-//       } else {
-//         console.log('woooooooooo');
-//       }
-//     });
-
-
-//   }
-
-//   logIn = (email, password) => {
-//     console.log('logInAcc');
-//     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-//       let errorCode = error.code;
-//       let errorMessage = error.message;
-//       console.log(errorCode, errorMessage);
-//     });
-//   }
-
-//   createANewAccount = (email, password) => {
-//     console.log('createAcc');
-//     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-//       let errorCode = error.code;
-//       let errorMessage = error.message;
-//       console.log(errorCode, errorMessage);
-//     });
-//   }
-
-//   render() {
-//     return(
-//     <div className="App">
-//       <ScreenRender user={this.state.user} createANewAccount={this.createANewAccount} logIn={this.logIn}/>
-//     </div>
-//     );
-//   }
-// }
+export default AppFunc;

@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
-import App from './App';
+// import App from './App';
+import AppFunc from './AppFunc';
 import * as serviceWorker from './serviceWorker';
 
 //REDUX - GENERATING ALL THE SLICES (REDUCERS)
@@ -13,36 +14,58 @@ import { combineReducers } from 'redux';
 
 const screenSlice = createSlice({
     name: 'screen',
-    initialState: 'calendar',
+    initialState: 'calendar_month',
     reducers: {
       welcome: state => state = 'welcome',
       logIn: state => state = 'logIn',
       signIn: state => state = 'signIn',
-      calendar: state => state = 'calendar'
+      calendar: state => state = 'calendar',
+      month: state => state = 'calendar_month'
     }
-})
+});
 
 const userSlice = createSlice({
     name: 'user',
-    initialState: {},
+    initialState: { email: '' },
     reducers: {
         setAUser: (state, action) => {
-          state = action.payload;
+          let email = action.payload;
+          console.log(email);
+          state.email = action.payload;
         },
         unsetAUser: (state) => {
-            state = {};
+            state.email = '';
         }
       }
 })
 
 const reservationsSlice = createSlice({
     name: 'reservations',
-    initialState: [],
+    initialState: { reservations: [] },
     reducers: {
         addAReservation: (state, action) => {
-          state.push(action.payload);
+          state.reservations.push(action.payload);
+        },
+        stateTheState: (state, action) => {
+          state.reservations = action.payload;
         }
       }
+})
+
+const dateSlice = createSlice({
+  name: 'date',
+  initialState: {
+    currentDate: '',
+    activeMonth: ''
+  },
+  reducers: {
+    setActiveMonth: (state, action) => {
+      state.activeMonth = action.payload
+    },
+    setCurrentDate: (state, action) => {
+      state.currentDate = action.payload
+    }
+  }
 })
 
 
@@ -51,11 +74,13 @@ const reservationsSlice = createSlice({
 const screenReducer = screenSlice.reducer;
 const reservationsReducer = reservationsSlice.reducer;
 const userReducer = userSlice.reducer;
+const dateReducer = dateSlice.reducer;
 
 const allReducer = combineReducers({
     screen: screenReducer,
     reservations: reservationsReducer,
-    user: userReducer
+    user: userReducer,
+    date: dateReducer
 })
 
 
@@ -68,13 +93,14 @@ const store = configureStore({
 const actionsObject = {
     screenActions: screenSlice.actions,
     reservationsActions: reservationsSlice.actions,
-    userActions: userSlice.actions
+    userActions: userSlice.actions,
+    dateActions: dateSlice.actions
 }
 
 
 //STARTING THE REACT RENDER
 ReactDOM.render(<Provider store={store}>
-    <App />
+    <AppFunc />
 </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

@@ -20,23 +20,23 @@ function ScreenRender(props) {
         console.log('go back');
     }
 
-    const logInAndShowCalendar = () => {
+    const showCalendar = () => {
         dispatch(calendarAction());
         console.log('hello, calendar');
     }
 
-    if (screen === 'calendar') {
+    if (screen.includes('calendar')) {
         return(
             <div>
-                <Calendar user={props.user}/>
+                <Calendar screen={screen}/>
             </div>
         )
     } else {
         return(
         <div>
             <Welcome/>
-            <CreateAccount logInAndShowCalendar={logInAndShowCalendar} goBack={goBack} showMe={screen} createANewAccount={props.createANewAccount}/>
-            <LogIn goBack={goBack} showMe={screen} logIn={props.logIn}/>
+            <CreateAccount showCalendar={showCalendar} goBack={goBack} showMe={screen} createANewAccount={props.createANewAccount}/>
+            <LogIn showCalendar={showCalendar} goBack={goBack} showMe={screen} logIn={props.logIn}/>
         </div>
     )
 

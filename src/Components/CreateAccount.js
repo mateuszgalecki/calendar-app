@@ -19,7 +19,7 @@ class CreateAccount extends Component {
         e.preventDefault();
         console.log(this.state.email, this.state.password)
         this.props.createANewAccount(this.state.email, this.state.password);
-        this.props.logInAndShowCalendar();
+        // this.props.showCalendar();
     }
 
     handleEmailChange = (e) => {

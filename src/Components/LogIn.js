@@ -16,7 +16,8 @@ class LogIn extends Component {
     handleSubmit(e) {
         e.preventDefault();
         console.log(this.state.email, this.state.password)
-        // this.props.createANewAccount(this.state.email, this.state.password);
+        this.props.logIn(this.state.email, this.state.password);
+        // this.props.showCalendar();
     }
 
     handleEmailChange = (e) => {
