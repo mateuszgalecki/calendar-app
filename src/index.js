@@ -29,7 +29,6 @@ const userSlice = createSlice({
     initialState: { email: '' },
     reducers: {
         setAUser: (state, action) => {
-          let email = action.payload;
           state.email = action.payload;
         },
         unsetAUser: (state) => {
@@ -68,10 +67,31 @@ const dateSlice = createSlice({
 
 const viewDaySlice = createSlice({
   name: 'viewDay',
-  initialState: {value: 'hide'},
+  initialState: {
+    value: 'Sun Jan 12 2020 00:00:00 GMT+0100 (czas środkowoeuropejski standardowy)'
+  },
   reducers: {
     setViewDay: (state, action) => {
       state.value = action.payload
+    }
+  }
+})
+
+const restaurantSlice = createSlice({
+  name: 'restaurant',
+  initialState: {
+    tablesArray: [],
+    hourSpan: ['8', '22']
+  },
+  reducers: {
+    setTablesArray: (state, action) => {
+      state.tablesArray = action.payload
+    },
+    setLowerValue: (state, action) => {
+      state.hourSpan[0] = action.payload
+    },
+    setUpperValue: (state, action) => {
+      state.hourSpan[1] = action.payload
     }
   }
 })
@@ -84,13 +104,15 @@ const reservationsReducer = reservationsSlice.reducer;
 const userReducer = userSlice.reducer;
 const dateReducer = dateSlice.reducer;
 const viewDayReducer = viewDaySlice.reducer;
+const restaurantReducer = restaurantSlice.reducer;
 
 const allReducer = combineReducers({
     screen: screenReducer,
     reservations: reservationsReducer,
     user: userReducer,
     date: dateReducer,
-    viewDay: viewDayReducer
+    viewDay: viewDayReducer,
+    restaurant: restaurantReducer
 })
 
 
@@ -105,7 +127,8 @@ const actionsObject = {
     reservationsActions: reservationsSlice.actions,
     userActions: userSlice.actions,
     dateActions: dateSlice.actions,
-    viewDayActions: viewDaySlice.actions
+    viewDayActions: viewDaySlice.actions,
+    restaurantActions: restaurantSlice.actions
 }
 
 

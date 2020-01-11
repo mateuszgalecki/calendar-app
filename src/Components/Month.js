@@ -13,7 +13,6 @@ function Month(props) {
     const dispatch = useDispatch();
     let viewedDay = useSelector(state => state.viewDay).value;
     const setViewedDay = actionsFunction().viewDayActions.setViewDay;
-    let dataForDayView = [];
    
     // const dynamicArray = ["2007", "2008", "2009", "2010"];
     // const obj = Object.fromEntries(
@@ -41,20 +40,18 @@ function Month(props) {
         }
     }
 
-    if (typeof viewedDay == Object) {
-        console.log('should pass data');
-        reservationsArray.forEach(day => {
-            if (day[0] === viewedDay) {
-                dataForDayView = day[1];
-            }
-        })
-    }
+    // if (typeof viewedDay == Object) {
+    //     console.log('should pass data');
+    //     reservationsArray.forEach(day => {
+    //         if (day[0] === viewedDay) {
+    //             dataForDayView = day[1];
+    //         }
+    //     })
+    // }
 
 
     const viewDay = function(date) {
-        // dispatch(setViewedDay(date));
-        
-        // console.log(format(date, 'dd/MM/yyyy'));
+        dispatch(setViewedDay(date));
     }
 
 
@@ -77,16 +74,23 @@ function Month(props) {
                     <div className='dayName'>SUN</div>
                 </div>
                 {
-                    reservationsArray.map(day => {
-                        return <Day viewDay={viewDay} data={day}/>
+                    reservationsArray.map((day, index) => {
+                        return <Day key={index} viewDay={viewDay} data={day}/>
                     })
                 }
             </div>
         </section>
     )
     } else {
+        let dataToPass = [];
+        reservationsArray.forEach(day => {
+            if (day[0].toString() === viewedDay) {
+                dataToPass = day[1];
+            }
+        })
+
         return(
-            <Restaurant/>
+            <Restaurant day={viewedDay} data={dataToPass}/>
         )
     }
     
