@@ -31,7 +31,6 @@ const db = firebase.firestore();
 
 const AppFunc = function() {
 
-    console.log('mounted');
 
     const dispatch = useDispatch();
     let user = useSelector(state => state.user).email;
@@ -75,7 +74,6 @@ const AppFunc = function() {
     //SETTIN A LISTENER ON THE AUTH OBJECT TO MONITOR IF A USER IS LOGGED IN
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-          console.log(user.email);
           dispatch(setAUser(user.email));
         } else {
           console.log('woooooooooo');

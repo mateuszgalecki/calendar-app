@@ -1,0 +1,47 @@
+.month {
+    width: 100%;
+    margin: 15% 0 0 0;
+    .monthName {
+        text-align: center;
+        margin: 0 0 3px 0;
+        .prevMonthBtn {
+            float: left;
+        }
+        .nextMonthBtn {
+            float: right;
+        }
+    }
+    .monthHeader {
+        width: 100%;
+        height: 20px;
+        background-color: lightcoral;
+        margin: 0 0 1px 0;
+        .dayName {
+            float: left;
+            width: 14.285%;
+        }
+    }
+}
+
+.Day {
+    width: 14.285%;
+    height: 50px;
+    background-color: lightcoral;
+    float: left;
+    font-size: 0.8em;
+}
+
+.passiveDay {
+        background-color: lightgrey;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Restaurant {
+    width: 90%;
+    height: 80%;
+}

@@ -30,7 +30,6 @@ const userSlice = createSlice({
     reducers: {
         setAUser: (state, action) => {
           let email = action.payload;
-          console.log(email);
           state.email = action.payload;
         },
         unsetAUser: (state) => {
@@ -41,11 +40,10 @@ const userSlice = createSlice({
 
 const reservationsSlice = createSlice({
     name: 'reservations',
-    initialState: { reservations: [] },
+    initialState: { 
+      reservations: []
+    },
     reducers: {
-        addAReservation: (state, action) => {
-          state.reservations.push(action.payload);
-        },
         stateTheState: (state, action) => {
           state.reservations = action.payload;
         }
@@ -56,7 +54,7 @@ const dateSlice = createSlice({
   name: 'date',
   initialState: {
     currentDate: '',
-    activeMonth: ''
+    activeMonth: 0
   },
   reducers: {
     setActiveMonth: (state, action) => {
@@ -68,6 +66,16 @@ const dateSlice = createSlice({
   }
 })
 
+const viewDaySlice = createSlice({
+  name: 'viewDay',
+  initialState: {value: 'hide'},
+  reducers: {
+    setViewDay: (state, action) => {
+      state.value = action.payload
+    }
+  }
+})
+
 
 //REDUX - MAKING AN ALLREDUCER
 
@@ -75,12 +83,14 @@ const screenReducer = screenSlice.reducer;
 const reservationsReducer = reservationsSlice.reducer;
 const userReducer = userSlice.reducer;
 const dateReducer = dateSlice.reducer;
+const viewDayReducer = viewDaySlice.reducer;
 
 const allReducer = combineReducers({
     screen: screenReducer,
     reservations: reservationsReducer,
     user: userReducer,
-    date: dateReducer
+    date: dateReducer,
+    viewDay: viewDayReducer
 })
 
 
@@ -94,7 +104,8 @@ const actionsObject = {
     screenActions: screenSlice.actions,
     reservationsActions: reservationsSlice.actions,
     userActions: userSlice.actions,
-    dateActions: dateSlice.actions
+    dateActions: dateSlice.actions,
+    viewDayActions: viewDaySlice.actions
 }
 
 
