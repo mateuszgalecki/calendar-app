@@ -22,9 +22,9 @@ const Restaurant = function(props) {
                 newTablesArray[table - 1].push([startHour, reservation.info.duration])
             })
         })
+        // dispatch(setTablesArray(newTablesArray));
     }
 
-    // dispatch(setTablesArray(newTablesArray));
     // nie działa kurwe, robi się pętla, do ogarnięcia
 
     // console.log(newTablesArray);
@@ -86,6 +86,11 @@ const Restaurant = function(props) {
         hoursArray.push(time_convert(i));
     }
 
+    //A function to make a range array with a certain step value
+    const xah_range = ((min, max, step = 1) => (Array(Math.floor((max - min)/step) + 1) . fill(min) . map ( ((x, i) => ( x + i * step )) )));
+
+
+
     return(
         <section className='center primaryView fullScreen'>
             <p>{headerString}</p>
@@ -102,7 +107,7 @@ const Restaurant = function(props) {
             </datalist>
             
             <div className='Restaurant'>
-                <div className='table table1'>1</div>
+                {/* <div className='table table1'>1</div>
                 <div className='table table2'>2</div>
                 <div className='table table3'>3</div>
                 <div className='table table4'>4</div>
@@ -111,7 +116,32 @@ const Restaurant = function(props) {
                 <div className='table table7'>7</div>
                 <div className='table table8'>8</div>
                 <div className='table table9'>9</div>
-                <div className='table table10'>10</div>
+                <div className='table table10'>10</div> */}
+                {newTablesArray.map((resArr, key) => {
+                    let tableNumberClass = 'table' + (key + 1);
+                    let upperValueInMinutes = time_convert_back(upperValue)
+                    let lowerValueInMinutes = time_convert_back(lowerValue)
+                    let currentSpanArray = xah_range(lowerValueInMinutes, upperValueInMinutes, 30);
+                    let isTheTableTaken = false;
+                    resArr.forEach(res => {
+                        console.log(res[0], res[1])
+                        let startHour = time_convert_back(res[0]) + 30;
+                        let finnishHour = startHour + res[1] * 60 - 30;
+                        let reservationSpan = xah_range(startHour, finnishHour, 30);
+                        reservationSpan.forEach(hour => {
+                            if (currentSpanArray.includes(hour)) {
+                                isTheTableTaken = true;
+                            }
+                        })
+                    })
+                    let tableTaken = '';
+                    if (isTheTableTaken) {
+                        tableTaken = 'taken';
+                    } else {
+                        tableTaken = '';
+                    }
+                    return <div key={key} className={'table ' + tableNumberClass + ' ' + tableTaken}>{key + 1}</div>
+                })}
             </div>
         </section>
     )
