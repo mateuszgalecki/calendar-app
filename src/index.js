@@ -80,8 +80,8 @@ const viewDaySlice = createSlice({
 const restaurantSlice = createSlice({
   name: 'restaurant',
   initialState: {
-    tablesArray: [],
-    hourSpan: ['8', '22']
+    tablesArray: [[], [], [], [], [], [], [], [], [], []],
+    hourSpan: ['08:00', '22:00']
   },
   reducers: {
     setTablesArray: (state, action) => {
