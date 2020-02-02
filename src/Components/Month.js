@@ -23,7 +23,7 @@ function Month(props) {
     // )
     // console.log(obj);
     
-    if (reservationsArray[0] !== undefined) {
+    if (reservationsArray[0] !== undefined && reservationsArray !== undefined) {
         if (reservationsArray[0][0][0] === 0) {
             reservationsArray.shift();
         } else {
@@ -54,6 +54,12 @@ function Month(props) {
         dispatch(setViewedDay(date));
     }
 
+    const logOut = function() {
+        props.logOut();
+    }
+
+    console.log(viewedDay)
+    console.log(reservationsArray);
 
     if (viewedDay === 'hide') {
         return(
@@ -79,6 +85,7 @@ function Month(props) {
                     })
                 }
             </div>
+            <button onClick={logOut}>log out</button>
         </section>
     )
     } else {
@@ -90,7 +97,7 @@ function Month(props) {
         })
 
         return(
-            <Restaurant day={viewedDay} data={dataToPass}/>
+            <Restaurant addReservation={props.addReservation} day={viewedDay} data={dataToPass}/>
         )
     }
     

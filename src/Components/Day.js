@@ -18,22 +18,29 @@ function Day(props) {
 
     let date = getDate(data[0]);
     let activeClass = 'activeDay';
+
+    console.log(data)
     
     if (!(date > 0)) {
         date = '';
         activeClass = 'passiveDay'
     }
 
-    console.log(data[0].toString())
+    // console.log(data[0].toString())
     let dateString = data[0].toString();
 
+    console.log(data[0]);
+
     const doTheFuckingThing = function() {
-        console.log('sdfdf');
+        // console.log('sdfdf');
         props.viewDay(dateString);
     }
 
     return(
-        <div onClick={doTheFuckingThing} className={'Day ' + activeClass}>
+        <div onClick={() => {if (activeClass === 'activeDay') {
+            doTheFuckingThing()
+        }}}
+         className={'Day ' + activeClass}>
             {date} <br/> R:{resNumber}
         </div>
     )   

@@ -9,6 +9,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actionsFunction } from './index';
 //REDUX/>
 
+//<DATE-FNS
+import { format } from 'date-fns';
+//DATE-FNS/>
+
 //<FIREBASE
 import * as firebase from "firebase/app";
 import "firebase/analytics";
@@ -33,12 +37,14 @@ const AppFunc = function() {
 
 
     const dispatch = useDispatch();
-    let user = useSelector(state => state.user).email;
+    let user = useSelector(state => state.user);
+    console.log(user);
     const setAllReservations = actionsFunction().reservationsActions.stateTheState;
     const setAUser = actionsFunction().userActions.setAUser;
     const unsetAUser = actionsFunction().userActions.unsetAUser;
     const calendarAction = actionsFunction().screenActions.calendar;
     const welcomeAction = actionsFunction().screenActions.welcome;
+    const switchBookingScreen = actionsFunction().restaurantActions.switchBookingScreen;
 
 
     //FUNCTION TO SHOW THE CALENDAR SCREEN
@@ -46,38 +52,89 @@ const AppFunc = function() {
       dispatch(calendarAction());
       console.log('hello, calendar');
       let checkIfLoggedIn = setTimeout(() => {
-        if (user.email === '') {
-          dispatch(welcomeAction());
-          console.log('no such user')
+        let firebaseUser = firebase.auth().currentUser
+        if (!firebaseUser) {
+            dispatch(welcomeAction());
         } else {
-          console.log('user succesfully logged and will stay that way');
+            console.log('user succesfully logged and will stay that way');
         }
+        // let fuckingEmail = user.email;
+        // if (fuckingEmail === "no_user") {
+        //   console.log(user);
+        //   dispatch(welcomeAction());
+        //   console.log('no such user')
+        // } else {
+        //   console.log('user succesfully logged and will stay that way');
+        // }
       }, 5000);
   }
 
 
     //GETTING ALL THE RESERVATIONS FROM FIREBASE
-    db.collection('reservations').get().then((querySnapshot) => {
-        let reservations = [];
-        querySnapshot.forEach((doc) => {
-            let reservation = {
-                date: doc.id,
-                info: doc.data()
-        }
-        reservations.push(reservation);
-      })
-      dispatch(setAllReservations(reservations));
-    }).catch((error) => {
-      console.log(error);
+    // db.collection('reservations').get().then((querySnapshot) => {
+    //     let reservations = [];
+    //     querySnapshot.forEach((doc) => {
+    //         let reservation = {
+    //             date: doc.id,
+    //             info: doc.data()
+    //     }
+    //     reservations.push(reservation);
+    //   })
+    //   dispatch(setAllReservations(reservations));
+    // }).catch((error) => {
+    //   console.log(error);
+    // })
+
+    //TRY TO GET THE DATA WITH A SNAPSHOT METHOD INSTEAD OF 'GET()'
+    db.collection('reservations').onSnapshot(function(querySnapshot) {
+      let reservations = [];
+      querySnapshot.forEach((doc) => {
+          let reservation = {
+              date: doc.id,
+              info: doc.data()
+      }
+      reservations.push(reservation);
     })
+    dispatch(setAllReservations(reservations));
+    });
+
+    //ADDING A NEW RESERVATION IN FIRESTORE
+    
+    const addReservation = function(date, hourSpan, tables, name, phoneNumber) {
+
+      let documentName = format(date, "y-MM-dd") + "T" + hourSpan[0] + ":00";
+
+      let tablesArray = [];
+
+      tables.forEach((table, i) => {
+          if (table) {
+              tablesArray.push(i + 1);
+          }
+      });
+      
+      db.collection("reservations").doc(documentName).set({
+        duration: hourSpan[1],
+        name: name,
+        phone_number: phoneNumber,
+        spots: tablesArray
+      })
+      .then(function() {
+        alert("reservation succesfully added");
+        dispatch(switchBookingScreen());
+      })
+      .catch(function(error) {
+        console.error("Error writing document: ", error);
+      });
+    }
 
     //SETTIN A LISTENER ON THE AUTH OBJECT TO MONITOR IF A USER IS LOGGED IN
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          dispatch(setAUser(user.email));
+    firebase.auth().onAuthStateChanged((userrr) => {
+        if (userrr) {
+          // user.email = userrr.email;
+          dispatch(setAUser(userrr.email));
         } else {
           console.log('woooooooooo');
-          dispatch(unsetAUser());
+          // dispatch(unsetAUser());
         }
     });
 
@@ -106,10 +163,21 @@ const AppFunc = function() {
         showCalendar();
     }
 
+    //HANDLING LOGGING OUT
+    const logOut = () => {
+      firebase.auth().signOut().then(function() {
+        dispatch(welcomeAction())
+        dispatch(setAUser("no_user"));
+        console.log('i log outtttttt')
+      }).catch(function(error) {
+        console.log(error);
+      });
+    }
+
     
     return(
     <div className="App">
-        <ScreenRender showCalendar={showCalendar} createANewAccount={createANewAccount} logIn={logIn}/>
+        <ScreenRender addReservation={addReservation} logOut={logOut} showCalendar={showCalendar} createANewAccount={createANewAccount} logIn={logIn}/>
     </div>
     );
 }

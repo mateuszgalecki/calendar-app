@@ -14,7 +14,7 @@ import { combineReducers } from 'redux';
 
 const screenSlice = createSlice({
     name: 'screen',
-    initialState: 'calendar_month',
+    initialState: 'calendar',
     reducers: {
       welcome: state => state = 'welcome',
       logIn: state => state = 'logIn',
@@ -26,7 +26,7 @@ const screenSlice = createSlice({
 
 const userSlice = createSlice({
     name: 'user',
-    initialState: { email: '' },
+    initialState: { email: "no_user" },
     reducers: {
         setAUser: (state, action) => {
           state.email = action.payload;
@@ -68,30 +68,51 @@ const dateSlice = createSlice({
 const viewDaySlice = createSlice({
   name: 'viewDay',
   initialState: {
-    value: 'Sun Jan 12 2020 00:00:00 GMT+0100 (czas środkowoeuropejski standardowy)'
+    value: 'hide',
+    addReservation: false
   },
   reducers: {
     setViewDay: (state, action) => {
       state.value = action.payload
+    },
+    setAddReservation: (state) => {
+      state.addReservation = !state.addReservation
     }
   }
 })
 
+//Sun Jan 12 2020 00:00:00 GMT+0100 (czas środkowoeuropejski standardowy)
+
 const restaurantSlice = createSlice({
   name: 'restaurant',
   initialState: {
-    tablesArray: [[], [], [], [], [], [], [], [], [], []],
-    hourSpan: ['08:00', '22:00']
+    tablesArray: [false, false, false, false, false, false, false, false, false, false],
+    hourSpan: ['08:00', '22:00'],
+    bookingScreen: false,
+    resName: '',
+    resPhone: '',
   },
   reducers: {
-    setTablesArray: (state, action) => {
-      state.tablesArray = action.payload
+    setTable: (state, action) => {
+      state.tablesArray[action.payload] = !state.tablesArray[action.payload];
+    },
+    switchBookingScreen: (state) => {
+      state.bookingScreen = !state.bookingScreen;
+    },
+    setTableAsFalse: (state, action) => {
+      state.tablesArray[action.payload] = false;
     },
     setLowerValue: (state, action) => {
-      state.hourSpan[0] = action.payload
+      state.hourSpan[0] = action.payload;
     },
     setUpperValue: (state, action) => {
-      state.hourSpan[1] = action.payload
+      state.hourSpan[1] = action.payload;
+    },
+    setResName: (state, action) => {
+      state.resName = action.payload;
+    },
+    setResPhone: (state, action) => {
+      state.resPhone = action.payload;
     }
   }
 })

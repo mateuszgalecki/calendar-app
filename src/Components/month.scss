@@ -2,6 +2,7 @@
     width: 100%;
     margin: 15% 0 0 0;
     .monthName {
+        align-self: flex-start;
         text-align: center;
         margin: 0 0 3px 0;
         .prevMonthBtn {
@@ -113,10 +114,11 @@
 .Restaurant {
     width: 90%;
     height: 60%;
-    margin-top: 10%;
+    margin-top: 4%;
     display: grid;
     grid-template-columns: auto 13% 13% 13% 13% 13% 13% 13% auto;
     grid-template-rows: auto 12% 12% 12% 12% 12% 12% 12% 12%  auto;
+    border: 2px solid bisque;
     .table {
         background-color: lime;
         margin: 4%;
@@ -165,6 +167,9 @@
     }
     .taken {
         background-color: red;
+    }
+    .selected {
+        background-color: darkolivegreen;
     }
     
 }

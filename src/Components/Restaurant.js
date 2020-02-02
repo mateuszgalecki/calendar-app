@@ -2,15 +2,20 @@ import React from 'react';
 import { format } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionsFunction } from '../index';
+import AddReservationScreen from './AddReservationScreen';
 
 const Restaurant = function(props) {
 
     const dispatch = useDispatch();
     let lowerValue = useSelector(state => state.restaurant).hourSpan[0];
     let upperValue = useSelector(state => state.restaurant).hourSpan[1];
+    let bookingScreen = useSelector(state => state.restaurant).bookingScreen;
     const lowerAction = actionsFunction().restaurantActions.setLowerValue;
     const upperAction = actionsFunction().restaurantActions.setUpperValue;
-    const setTablesArray = actionsFunction().restaurantActions.setTablesArray;
+    const setViewDayAction = actionsFunction().viewDayActions.setViewDay;
+    const setTable = actionsFunction().restaurantActions.setTable;
+    const switchBookingScreen = actionsFunction().restaurantActions.switchBookingScreen;
+    const setTableAsFalse = actionsFunction().restaurantActions.setTableAsFalse;
 
     let tablesArray = useSelector(state => state.restaurant).tablesArray;
     let newTablesArray = [[], [], [], [], [], [], [], [], [], []];
@@ -22,12 +27,10 @@ const Restaurant = function(props) {
                 newTablesArray[table - 1].push([startHour, reservation.info.duration])
             })
         })
-        // dispatch(setTablesArray(newTablesArray));
     }
 
-    // nie działa kurwe, robi się pętla, do ogarnięcia
-
-    // console.log(newTablesArray);
+    //A function to make a range array with a certain step value
+    const xah_range = ((min, max, step = 1) => (Array(Math.floor((max - min)/step) + 1) . fill(min) . map ( ((x, i) => ( x + i * step )) )));
     
     let day = new Date(props.day);
     let headerString = format(day, 'EEEE, do LLLL yyyy');
@@ -86,18 +89,35 @@ const Restaurant = function(props) {
         hoursArray.push(time_convert(i));
     }
 
-    //A function to make a range array with a certain step value
-    const xah_range = ((min, max, step = 1) => (Array(Math.floor((max - min)/step) + 1) . fill(min) . map ( ((x, i) => ( x + i * step )) )));
+    
 
+    //Back to month function
 
+    const backToMonth = function() {
+        dispatch(setViewDayAction('hide'));
+    }
+
+    //Tables selection fns
+
+    const selectTheTable = function(key) {
+        dispatch(setTable(key));
+    }
+
+    const cannotSelect = function() {
+        console.log('taken');
+    }
+
+    //Go to booking screen fn
+
+    const goToBookingScreen = function() {
+        dispatch(switchBookingScreen());
+    }
 
     return(
         <section className='center primaryView fullScreen'>
-            <p>{headerString}</p>
-            {/* <span className="multi-range">
-                <input onChange={handleLowerChange} value={lowerValue} type="range" min="8" max="22" id="lower"/>
-                <input onChange={handleUpperChange} value={upperValue} type="range" min="8" max="22" id="upper"/>
-            </span> */}
+            <AddReservationScreen addReservation={props.addReservation} selectedTables={tablesArray} selectedHourSpan={[lowerValue, (time_convert_back(upperValue) - time_convert_back(lowerValue)) / 60]} goBack={goToBookingScreen} showClass={bookingScreen ? '' : 'hideMe'} day={day}/>
+            <p>{headerString}</p><br/>
+            <p>Choose the hour, select the tables that You want to book and click "add a reservation" button.</p><br/>
             <input type='text' list='hours' value={lowerValue} onFocus={handleFocus} onChange={handleLowerChange}/>
             <input type='text' list='hours' value={upperValue} onFocus={handleFocus} onChange={handleUpperChange}/>
             <datalist id='hours'>
@@ -105,18 +125,7 @@ const Restaurant = function(props) {
                     return <option key={key} value={hour}/>
                 })}
             </datalist>
-            
             <div className='Restaurant'>
-                {/* <div className='table table1'>1</div>
-                <div className='table table2'>2</div>
-                <div className='table table3'>3</div>
-                <div className='table table4'>4</div>
-                <div className='table table5'>5</div>
-                <div className='table table6'>6</div>
-                <div className='table table7'>7</div>
-                <div className='table table8'>8</div>
-                <div className='table table9'>9</div>
-                <div className='table table10'>10</div> */}
                 {newTablesArray.map((resArr, key) => {
                     let tableNumberClass = 'table' + (key + 1);
                     let upperValueInMinutes = time_convert_back(upperValue)
@@ -126,7 +135,8 @@ const Restaurant = function(props) {
                     resArr.forEach(res => {
                         console.log(res[0], res[1])
                         let startHour = time_convert_back(res[0]) + 30;
-                        let finnishHour = startHour + res[1] * 60 - 30;
+                        let finnishHour = startHour + res[1] * 60 - 60;
+                        console.log(finnishHour);
                         let reservationSpan = xah_range(startHour, finnishHour, 30);
                         reservationSpan.forEach(hour => {
                             if (currentSpanArray.includes(hour)) {
@@ -135,14 +145,19 @@ const Restaurant = function(props) {
                         })
                     })
                     let tableTaken = '';
-                    if (isTheTableTaken) {
-                        tableTaken = 'taken';
-                    } else {
+                    let tableSelected = '';
+                    if (!isTheTableTaken) {
+                        tablesArray[key] ? tableSelected = 'selected' : tableSelected = '';
                         tableTaken = '';
+                    } else {
+                        tableTaken = 'taken';
+                        dispatch(setTableAsFalse(key));
                     }
-                    return <div key={key} className={'table ' + tableNumberClass + ' ' + tableTaken}>{key + 1}</div>
+                    return <div onClick={isTheTableTaken ? cannotSelect : () => selectTheTable(key)} key={key} className={'table ' + tableNumberClass + ' ' + tableTaken + '' + tableSelected}>{key + 1}</div>
                 })}
             </div>
+            <button onClick={backToMonth}>back</button>
+            <button onClick={goToBookingScreen}>add a reservation</button>
         </section>
     )
 }

@@ -28,7 +28,7 @@ function ScreenRender(props) {
     if (screen.includes('calendar')) {
         return(
             <div>
-                <Calendar screen={screen}/>
+                <Calendar addReservation={props.addReservation} logOut={props.logOut} screen={screen}/>
             </div>
         )
     } else {

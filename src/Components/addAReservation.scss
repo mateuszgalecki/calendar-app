@@ -1,0 +1,16 @@
+.yo {
+    color: darkorchid;
+}
+
+.temporaryPin {
+    z-index: 10;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 30px;
+    display: flex;
+}
+
+.hideMe {
+    display: none;
+}

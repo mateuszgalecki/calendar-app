@@ -3,14 +3,14 @@ import './calendar.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionsFunction } from '../index';
 import Month from './Month';
-import { formatISO, parse, addDays, getDate, getMonth, getDay, getYear, startOfMonth, addMonths, getDaysInMonth, parseISO } from 'date-fns';
+import { startOfYear, formatISO, parse, addDays, getDate, getMonth, getDay, getYear, startOfMonth, addMonths, getDaysInMonth, parseISO } from 'date-fns';
 
 
 
 function Calendar(props) {
 
     const dispatch = useDispatch();
-    let user = useSelector(state => state.user).email;
+    let user = useSelector(state => state.user);
     let reservations = useSelector(state => state.reservations).reservations;
     let activeMonthState = useSelector(state => state.date).activeMonth;
     let currentDate = useSelector(state => state.date).currentDate;
@@ -28,7 +28,7 @@ function Calendar(props) {
     //MAKING A RESERVATIONS-CALENDAR ARRAY
 
     let parsedCurrentDate = parseISO(currentDate);
-    let firstMonth = startOfMonth(parsedCurrentDate);
+    let firstMonth = startOfYear(parsedCurrentDate);
     let RESERVATIONS_CALENDAR_ARRAY = [];
     
     
@@ -78,7 +78,9 @@ function Calendar(props) {
             const resDate = parse(res.date, "yyyy-MM-dd'T'HH:mm:ss", new Date());
             const day = getDate(resDate);
             const month = getMonth(resDate);
-            RESERVATIONS_CALENDAR_ARRAY[month][day][1].push(res);
+            if (RESERVATIONS_CALENDAR_ARRAY[month][day] !== undefined) {
+                RESERVATIONS_CALENDAR_ARRAY[month][day][1].push(res);
+            }
         })
         
     };
@@ -86,24 +88,29 @@ function Calendar(props) {
     const nextMonth = function() {
         let nextMnth = activeMonthState + 1;
         if (activeMonthState === 11) {
-            nextMnth = 0;
+            // nextMnth = 0;
+            alert('you can only make reservations for the current year');
+        } else {
+            dispatch(setActiveMonthAction(nextMnth));
         }
-        dispatch(setActiveMonthAction(nextMnth));
     }
 
     const prevMonth = function() {
         let prevMnth = activeMonthState - 1;
         if (activeMonthState === 0) {
-            prevMnth = 11;
+            // prevMnth = 11;
+            alert('you can only make reservations for the current year');
+        } else {
+            dispatch(setActiveMonthAction(prevMnth));
         }
-        dispatch(setActiveMonthAction(prevMnth));
     }
     
 
     let reservationsToPass = RESERVATIONS_CALENDAR_ARRAY[activeMonthState];
+    console.log(RESERVATIONS_CALENDAR_ARRAY)
 
 
-    if (user.email === '') {
+    if (user.email === "no_user") {
         return(
             <div className={'fullScreen primaryView'}>
                 <div className={'loading'}> LOADING </div>
@@ -111,13 +118,13 @@ function Calendar(props) {
         )
     } else if (props.screen === 'calendar_month') {
         return (
-            <Month prevMonthFunction={prevMonth} nextMonthFunction={nextMonth} month={activeMonthState} reservations={reservationsToPass}/>
+            <Month addReservation={props.addReservation} logOut={props.logOut} prevMonthFunction={prevMonth} nextMonthFunction={nextMonth} month={activeMonthState} reservations={reservationsToPass}/>
         )
     } else {
         return(
         <section className='Calendar fullScreen primaryView'>
             <h1>RESTAURANT CALENDAR</h1>
-            <p>Welcome to our restaurant calendar, {user}. Here are some rules for how to use it:</p>
+            <p>Welcome to our restaurant calendar, {user.email}. Here are some rules for how to use it:</p>
             <p>You can make a reservation for 20 people tops. If you want to make a bigger one, please call us at +48 888 888 888.</p>
             <p>Click on the day that You want to make the reservation on. Fill out the form and choose Your spot in the restaurant. To specify the menu You'd like to order, please call us.</p>
             <p>We'll make everything to make Your visit at our restaurant pleasurable!</p>
