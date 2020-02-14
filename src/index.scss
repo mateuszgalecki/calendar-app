@@ -2,9 +2,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Roboto Slab', serif;
+  color: #4b636e
 }
 
-$primary-background: linear-gradient(0deg, rgba(0,3,20,1) 0%, rgba(0,6,31,1) 100%);
+
+
+$primary-background: #E8E8E8;
 $primary-font-color: #FFCFAD;
 
 .primaryView {
@@ -20,12 +24,14 @@ $primary-font-color: #FFCFAD;
   position: fixed;
   top: 0;
   left: 100vw;
+  z-index: 10;
 }
 
 .onTheLeft {
   position: fixed;
   top: 0;
   right: 100vw;
+  z-index: 10;
 }
 
 .slideRight {
@@ -52,9 +58,71 @@ $primary-font-color: #FFCFAD;
   100% { left: 0 }
 }
 
+input {
+  z-index: 10;
+  border: none;
+  padding: 2px;
+  outline: none;
+  background-color: #b2ebf2;
+  &:focus {
+    background-color: #4b636e;
+    color: #b2ebf2;
+    &::placeholder {
+      color: #b2ebf2;
+    }
+  }
+}
+
 .fullScreen {
   width: 100vw;
   height: 100vh;
   padding: 4%;
+  &::before {
+    content: '';
+    display: block;
+    position: fixed;
+    width: 500px;
+    height: 600px;
+    background-color: #e6f5f5;
+    top: -200px;
+    left: -300px;
+    transform: rotate(35deg);
+  }
+  &::after {
+    content: '';
+    display: block;
+    position: fixed;
+    width: 500px;
+    height: 600px;
+    background-color: #e6f5f5;
+    bottom: -200px;
+    right: -300px;
+    transform: rotate(35deg);
+  }
 }
 
+.primary_button {
+  border: none;
+  background-color: #81b9bf;
+  padding: 6px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  outline: none;
+  &:active {
+    background-color: #78909c;
+    transition: background-color 0.13s ease-out;
+  }
+}
+
+.changeMonthBtn {
+  background-color: #81b9bf;
+  border: none;
+  font-size: 0.75rem;
+  outline: none;
+  padding: 3px;
+  border-radius: 5px;
+  &:active {
+    background-color: #78909c;
+    transition: background-color 0.13s ease-out;
+  }
+}

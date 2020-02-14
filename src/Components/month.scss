@@ -1,39 +1,54 @@
 .month {
     width: 100%;
-    margin: 15% 0 0 0;
+    margin: 15% 0 9% 0;
+    color: #4b636e;
+    z-index: 10;
     .monthName {
         align-self: flex-start;
         text-align: center;
         margin: 0 0 3px 0;
         .prevMonthBtn {
             float: left;
+            margin-left: 10px;
         }
         .nextMonthBtn {
             float: right;
+            margin-right: 10px;
         }
     }
     .monthHeader {
         width: 100%;
         height: 20px;
-        background-color: lightcoral;
+        background-color: #b2ebf2;
         margin: 0 0 1px 0;
         .dayName {
             float: left;
             width: 14.285%;
+            text-align: center;
+            border: 1px solid #a7c0cd;
+            font-size: 0.9rem;
         }
     }
+}
+
+.Month button {
+    z-index: 10;
 }
 
 .Day {
     width: 14.285%;
     height: 50px;
-    background-color: lightcoral;
+    background-color: #b2ebf2;
     float: left;
-    font-size: 0.8em;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #a7c0cd;
 }
 
 .passiveDay {
-        background-color: lightgrey;
+        background-color: #D4D4D4;
 }
 
 .center {

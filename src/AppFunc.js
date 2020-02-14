@@ -116,7 +116,8 @@ const AppFunc = function() {
         duration: hourSpan[1],
         name: name,
         phone_number: phoneNumber,
-        spots: tablesArray
+        spots: tablesArray,
+        user: user.email
       })
       .then(function() {
         alert("reservation succesfully added");

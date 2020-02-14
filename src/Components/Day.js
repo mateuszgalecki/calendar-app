@@ -1,7 +1,6 @@
 import React from 'react';
 import './month.scss';
 import { getDate } from 'date-fns';
-import Restaurant from './Restaurant';
 
 function Day(props) {
 
@@ -18,8 +17,6 @@ function Day(props) {
 
     let date = getDate(data[0]);
     let activeClass = 'activeDay';
-
-    console.log(data)
     
     if (!(date > 0)) {
         date = '';
@@ -28,8 +25,6 @@ function Day(props) {
 
     // console.log(data[0].toString())
     let dateString = data[0].toString();
-
-    console.log(data[0]);
 
     const doTheFuckingThing = function() {
         // console.log('sdfdf');
@@ -41,9 +36,12 @@ function Day(props) {
             doTheFuckingThing()
         }}}
          className={'Day ' + activeClass}>
-            {date} <br/> R:{resNumber}
+            {date}
         </div>
     )   
 }
+
+
+{/* <br/> R:{resNumber} */}
 
 export default Day;

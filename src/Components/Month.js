@@ -5,6 +5,7 @@ import { getDay, format, toDate } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionsFunction } from '../index';
 import Restaurant from './Restaurant';
+import YourReservations from './YourReservations';
 
 function Month(props) {
     let reservationsArray = props.reservations;
@@ -54,21 +55,23 @@ function Month(props) {
         dispatch(setViewedDay(date));
     }
 
+    const viewYourReservations = function() {
+        dispatch(setViewedDay('yourReservations'));
+    }
+
     const logOut = function() {
         props.logOut();
     }
 
-    console.log(viewedDay)
-    console.log(reservationsArray);
 
     if (viewedDay === 'hide') {
         return(
         <section className='Month fullScreen primaryView'>
             <div className='month'>
                 <div className='monthName'>
-                    <button onClick={props.prevMonthFunction} className='prevMonthBtn'>prev</button>
+                    <button onClick={props.prevMonthFunction} className='changeMonthBtn prevMonthBtn'>prev</button>
                     {monthNames[thisMonth]}
-                    <button onClick={props.nextMonthFunction} className='nextMonthBtn'>next</button>
+                    <button onClick={props.nextMonthFunction} className='changeMonthBtn nextMonthBtn'>next</button>
                 </div>
                 <div className='monthHeader'>
                     <div className='dayName'>MON</div>
@@ -86,8 +89,13 @@ function Month(props) {
                 }
             </div>
             <button onClick={logOut}>log out</button>
+            <button onClick={viewYourReservations}>go to Your reservations</button>
         </section>
     )
+    } else if (viewedDay === 'yourReservations') {
+        return(
+            <YourReservations/>
+        )
     } else {
         let dataToPass = [];
         reservationsArray.forEach(day => {

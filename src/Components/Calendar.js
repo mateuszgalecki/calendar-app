@@ -18,12 +18,26 @@ function Calendar(props) {
     const setCurrentDateAction = actionsFunction().dateActions.setCurrentDate;
     const monthAction = actionsFunction().screenActions.month;
 
+    console.log(reservations);
+
     //SETTING AN ACTIVE MONTH FOR THE FIRST TIME
     if (currentDate === '') {
         let activeMonth = formatISO(new Date());        
         dispatch(setCurrentDateAction(activeMonth));
         dispatch(setActiveMonthAction(getMonth(new Date())));
     }
+
+    //MAKING A USER SPECIFIC RESERVATIONS ARRAY
+
+    let myReservations = [];
+    reservations.forEach((reservation) => {
+        if (reservation.info.user === user.email) {
+            myReservations.push(reservation);
+        }
+    })
+
+    console.log(myReservations);
+
 
     //MAKING A RESERVATIONS-CALENDAR ARRAY
 
@@ -107,7 +121,6 @@ function Calendar(props) {
     
 
     let reservationsToPass = RESERVATIONS_CALENDAR_ARRAY[activeMonthState];
-    console.log(RESERVATIONS_CALENDAR_ARRAY)
 
 
     if (user.email === "no_user") {
@@ -130,7 +143,7 @@ function Calendar(props) {
             <p>We'll make everything to make Your visit at our restaurant pleasurable!</p>
             <p>Cheers,</p>
             <p>RESTAURANT'S crew.</p>
-            <button onClick={() => dispatch(monthAction())} className={'goToCurrentMonthBtn'}>go to the current month</button>
+            <button onClick={() => dispatch(monthAction())} className={'goToCurrentMonthBtn primary_button'}>go to the current month</button>
         </section>
         )
     }

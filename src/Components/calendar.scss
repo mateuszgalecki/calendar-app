@@ -1,22 +1,26 @@
 .Calendar {
     font-size: 0.8em;
     padding: 10%;
+    color: #4b636e;
     h1 {
         opacity: 0;
-        font-size: 3em;
+        font-size: 2em;
         position: fixed;
         top: 5%;
         left: 10%;
         animation: fadeIn 1.5s ease-out forwards;
+        margin-top: 5px;
+        z-index: 10;
     }
     p {
         opacity: 0;
         margin: 0 0 3% 0;
-        font-size: 1.2em;
+        font-size: 1em;
         animation: fadeIn 1s ease-out 0.2s forwards;
+        z-index: 10;
     }
     p:nth-child(5) {
-        margin: 0 0 20% 0;
+        margin: 0 0 16% 0;
     }
     p:nth-child(2) {
         margin-top: 27%;
@@ -24,6 +28,8 @@
     .goToCurrentMonthBtn {
         opacity: 0;
         animation: fadeIn 1s ease-out 0.6s forwards;
+        margin-top: 3px;
+        z-index: 10;
     }
 }
 
@@ -45,7 +51,7 @@
     position: relative;
     bottom: -3px;
     left: -10%;
-    background-color: #FFCFAD;
+    background-color: #4b636e;
     animation: load 0.5s linear infinite;
 }
 
