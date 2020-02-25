@@ -14,7 +14,7 @@
     }
     p {
         opacity: 0;
-        margin: 0 0 3% 0;
+        margin: 0 0 6% 0;
         font-size: 1em;
         animation: fadeIn 1s ease-out 0.2s forwards;
         z-index: 10;
@@ -23,7 +23,7 @@
         margin: 0 0 16% 0;
     }
     p:nth-child(2) {
-        margin-top: 27%;
+        margin-top: 22%;
     }
     .goToCurrentMonthBtn {
         opacity: 0;

@@ -12,11 +12,7 @@ const AddReservationScreen = function(props) {
     let resName = useSelector(state => state.restaurant).resName;
     let resPhone = useSelector(state => state.restaurant).resPhone;
 
-    const weekDays = ['Sunday', 'Monday', 'Tuseday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    let today = format(props.day, "EEEE ', the ' do ' of ' LLLL ' ' y");
-
-    console.log(props.selectedTables, props.selectedHourSpan, props.day);
-
+    let today = format(props.day, "EEEE', the ' do ' of ' LLLL ' ' y");
     
 
     const nameBlur = function(event) {
@@ -51,13 +47,13 @@ const AddReservationScreen = function(props) {
     
     return(
         <section className={'temporaryPin fullScreen primaryView ' + props.showClass}>
-            <p>Hello, You're making a reservation for {today}. Keep in mind, that the reservation should last minimum two hours. The restaurant is opened from 8:00 untill 22:00, therefore Your reservation musn't start later that 20:00. </p>
+            <p>Hello, You're making a reservation for {today}. For the name please use only letters and for the telephone number, please use numbers or a plus sign.</p>
             <p>Your Name:</p>
             <input onChange={nameChange} value={resName} onBlur={nameBlur} type='text'></input>
             <p>Your telephone number:</p>
             <input onChange={phoneChange} value={resPhone} onBlur={phoneBlur} type='tel'></input>
-            <button onClick={() => props.addReservation(props.day, props.selectedHourSpan, props.selectedTables, resName, resPhone)}>add a reservation</button>
-            <button onClick={props.goBack}>back</button>
+            <button className='add_res_button' onClick={() => props.addReservation(props.day, props.selectedHourSpan, props.selectedTables, resName, resPhone)}>add a reservation</button>
+            <button className='back_button' onClick={props.goBack}>back</button>
         </section>
     )
 }

@@ -28,15 +28,18 @@ function ScreenRender(props) {
     if (screen.includes('calendar')) {
         return(
             <div>
-                <Calendar addReservation={props.addReservation} logOut={props.logOut} screen={screen}/>
+                <Calendar deleteAReservation={props.deleteAReservation} addReservation={props.addReservation} logOut={props.logOut} screen={screen}/>
             </div>
         )
     } else {
         return(
         <div>
+            {/* <Welcome/> */}
+            <div>
+                <LogIn showCalendar={showCalendar} goBack={goBack} showMe={screen} logIn={props.logIn}/>
+                <CreateAccount showCalendar={showCalendar} goBack={goBack} showMe={screen} createANewAccount={props.createANewAccount}/>
+            </div>
             <Welcome/>
-            <CreateAccount showCalendar={showCalendar} goBack={goBack} showMe={screen} createANewAccount={props.createANewAccount}/>
-            <LogIn showCalendar={showCalendar} goBack={goBack} showMe={screen} logIn={props.logIn}/>
         </div>
     )
 

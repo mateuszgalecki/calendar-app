@@ -30,7 +30,7 @@ const Restaurant = function(props) {
     }
 
     //A function to make a range array with a certain step value
-    const xah_range = ((min, max, step = 1) => (Array(Math.floor((max - min)/step) + 1) . fill(min) . map ( ((x, i) => ( x + i * step )) )));
+    const xah_range = ((min, max, step = 1) => (Array(Math.floor((max - min)/step) + 1).fill(min).map ( ((x, i) => ( x + i * step )) )));
     
     let day = new Date(props.day);
     let headerString = format(day, 'EEEE, do LLLL yyyy');
@@ -40,7 +40,7 @@ const Restaurant = function(props) {
     function time_convert(num){ 
         let hours = Math.floor(num / 60); 
         let minutes = num % 60;
-        if (minutes == 0) {
+        if (minutes === 0) {
             minutes = '00';
         }
         if (hours.toString().length === 1) {
@@ -110,14 +110,20 @@ const Restaurant = function(props) {
     //Go to booking screen fn
 
     const goToBookingScreen = function() {
-        dispatch(switchBookingScreen());
+        let someTablesSelected = false;
+        tablesArray.forEach(table => {
+            if (table) {someTablesSelected = true};
+        })
+        if (someTablesSelected) {dispatch(switchBookingScreen())}
     }
 
+    let switchingScreenVar = bookingScreen ? ' hideMe' : '';
+
     return(
-        <section className='center primaryView fullScreen'>
-            <AddReservationScreen addReservation={props.addReservation} selectedTables={tablesArray} selectedHourSpan={[lowerValue, (time_convert_back(upperValue) - time_convert_back(lowerValue)) / 60]} goBack={goToBookingScreen} showClass={bookingScreen ? '' : 'hideMe'} day={day}/>
+    <div>
+        <section className={'restaurantView center primaryView fullScreen' + switchingScreenVar}>
             <p>{headerString}</p><br/>
-            <p>Choose the hour, select the tables that You want to book and click "add a reservation" button.</p><br/>
+            <p>Choose the hour, select the tables that You want to book and click "add a reservation" button. If the tables are red, it means, that they're taken in the given hour span. Keep in mind, that the reservation must last at least two hours (and You won't be able to choose a smaller hour span). You have to select at least one table.</p><br/>
             <input type='text' list='hours' value={lowerValue} onFocus={handleFocus} onChange={handleLowerChange}/>
             <input type='text' list='hours' value={upperValue} onFocus={handleFocus} onChange={handleUpperChange}/>
             <datalist id='hours'>
@@ -133,10 +139,8 @@ const Restaurant = function(props) {
                     let currentSpanArray = xah_range(lowerValueInMinutes, upperValueInMinutes, 30);
                     let isTheTableTaken = false;
                     resArr.forEach(res => {
-                        console.log(res[0], res[1])
                         let startHour = time_convert_back(res[0]) + 30;
                         let finnishHour = startHour + res[1] * 60 - 60;
-                        console.log(finnishHour);
                         let reservationSpan = xah_range(startHour, finnishHour, 30);
                         reservationSpan.forEach(hour => {
                             if (currentSpanArray.includes(hour)) {
@@ -156,9 +160,11 @@ const Restaurant = function(props) {
                     return <div onClick={isTheTableTaken ? cannotSelect : () => selectTheTable(key)} key={key} className={'table ' + tableNumberClass + ' ' + tableTaken + '' + tableSelected}>{key + 1}</div>
                 })}
             </div>
-            <button onClick={backToMonth}>back</button>
-            <button onClick={goToBookingScreen}>add a reservation</button>
+            <button className='back_button' onClick={backToMonth}>back</button>
+            <button className='add_res_button' onClick={goToBookingScreen}>add a reservation</button>
         </section>
+        <AddReservationScreen addReservation={props.addReservation} selectedTables={tablesArray} selectedHourSpan={[lowerValue, (time_convert_back(upperValue) - time_convert_back(lowerValue)) / 60]} goBack={goToBookingScreen} showClass={bookingScreen ? '' : 'hideMe'} day={day}/>
+    </div>
     )
 }
 

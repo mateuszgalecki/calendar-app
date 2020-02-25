@@ -15,9 +15,7 @@ class LogIn extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log(this.state.email, this.state.password)
         this.props.logIn(this.state.email, this.state.password);
-        // this.props.showCalendar();
     }
 
     handleEmailChange = (e) => {
@@ -38,9 +36,9 @@ class LogIn extends Component {
                 <form className='primaryView' onSubmit={this.handleSubmit.bind(this)}>
                     <input onChange={this.handleEmailChange} value={this.state.email} type='email' placeholder='email'></input>
                     <input onChange={this.handlePasswordChange} value={this.state.password} type='text' placeholder='password' className='pushUp'></input>
-                    <input type='submit' value='log in' className='pushUp'></input>
+                    <input type='submit' value='log in' className='pushUp add_res_button'></input>
                 </form>
-                <button onClick={this.props.goBack}>back</button>
+                <button className='back_button' onClick={this.props.goBack}>back</button>
             </section>
         )
     }

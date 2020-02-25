@@ -133,12 +133,13 @@
     display: grid;
     grid-template-columns: auto 13% 13% 13% 13% 13% 13% 13% auto;
     grid-template-rows: auto 12% 12% 12% 12% 12% 12% 12% 12%  auto;
-    border: 2px solid bisque;
+    border: 2px solid #4b636e;
     .table {
-        background-color: lime;
+        background-color: #349DD5;
         margin: 4%;
         color:  black;
         font-size: 2em;
+        padding: 5%;
     }
     .table1 {
         grid-column: 2 / span 1;
@@ -184,7 +185,7 @@
         background-color: red;
     }
     .selected {
-        background-color: darkolivegreen;
+        background-color: #1C5B87;
     }
     
 }

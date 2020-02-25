@@ -13,8 +13,6 @@ function Day(props) {
         })
     }
 
-    let resNumber = reservations.length;
-
     let date = getDate(data[0]);
     let activeClass = 'activeDay';
     
@@ -28,7 +26,7 @@ function Day(props) {
 
     const doTheFuckingThing = function() {
         // console.log('sdfdf');
-        props.viewDay(dateString);
+        props.viewDay(dateString, data[0]);
     }
 
     return(
@@ -40,8 +38,5 @@ function Day(props) {
         </div>
     )   
 }
-
-
-{/* <br/> R:{resNumber} */}
 
 export default Day;

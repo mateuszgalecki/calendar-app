@@ -10,9 +10,11 @@ export default function Welcome() {
     
 
     return(
-        <section className='fullScreen primaryView'>
-            <button onClick={ () => {dispatch(logInAction())}}>log in</button>
-            <button onClick={ () => {dispatch(signInAction())}}>sign in</button>
+        <section className='fullScreen primaryView' id='trytry'>
+            <h1 className='welcome_header'>Welcome to our restaurant calendar!</h1>
+            <button className='add_res_button' onClick={ () => {dispatch(logInAction())}}>log in</button>
+            <button className='add_res_button' onClick={ () => {dispatch(signInAction())}}>sign in</button>
+            <div className='positioning_div'></div>
         </section>
     )
 }

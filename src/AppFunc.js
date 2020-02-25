@@ -38,10 +38,9 @@ const AppFunc = function() {
 
     const dispatch = useDispatch();
     let user = useSelector(state => state.user);
-    console.log(user);
     const setAllReservations = actionsFunction().reservationsActions.stateTheState;
+    const setUsersReservations = actionsFunction().reservationsActions.stateYourReservations;
     const setAUser = actionsFunction().userActions.setAUser;
-    const unsetAUser = actionsFunction().userActions.unsetAUser;
     const calendarAction = actionsFunction().screenActions.calendar;
     const welcomeAction = actionsFunction().screenActions.welcome;
     const switchBookingScreen = actionsFunction().restaurantActions.switchBookingScreen;
@@ -50,7 +49,6 @@ const AppFunc = function() {
     //FUNCTION TO SHOW THE CALENDAR SCREEN
     const showCalendar = () => {
       dispatch(calendarAction());
-      console.log('hello, calendar');
       let checkIfLoggedIn = setTimeout(() => {
         let firebaseUser = firebase.auth().currentUser
         if (!firebaseUser) {
@@ -58,43 +56,29 @@ const AppFunc = function() {
         } else {
             console.log('user succesfully logged and will stay that way');
         }
-        // let fuckingEmail = user.email;
-        // if (fuckingEmail === "no_user") {
-        //   console.log(user);
-        //   dispatch(welcomeAction());
-        //   console.log('no such user')
-        // } else {
-        //   console.log('user succesfully logged and will stay that way');
-        // }
       }, 5000);
   }
 
 
-    //GETTING ALL THE RESERVATIONS FROM FIREBASE
-    // db.collection('reservations').get().then((querySnapshot) => {
-    //     let reservations = [];
-    //     querySnapshot.forEach((doc) => {
-    //         let reservation = {
-    //             date: doc.id,
-    //             info: doc.data()
-    //     }
-    //     reservations.push(reservation);
-    //   })
-    //   dispatch(setAllReservations(reservations));
-    // }).catch((error) => {
-    //   console.log(error);
-    // })
+
 
     //TRY TO GET THE DATA WITH A SNAPSHOT METHOD INSTEAD OF 'GET()'
     db.collection('reservations').onSnapshot(function(querySnapshot) {
-      let reservations = [];
+    let reservations = [];
+    let currentUsersReservations = [];
       querySnapshot.forEach((doc) => {
+          let date = doc.id.slice(0, 19);
           let reservation = {
-              date: doc.id,
-              info: doc.data()
+              date: date,
+              info: doc.data(),
+              firestoreID: doc.id
+      }
+      if (reservation.info.user === user.email) {
+        currentUsersReservations.push(reservation);
       }
       reservations.push(reservation);
     })
+    dispatch(setUsersReservations(currentUsersReservations));
     dispatch(setAllReservations(reservations));
     });
 
@@ -103,6 +87,8 @@ const AppFunc = function() {
     const addReservation = function(date, hourSpan, tables, name, phoneNumber) {
 
       let documentName = format(date, "y-MM-dd") + "T" + hourSpan[0] + ":00";
+      let randomNum = Math.random()*1000;
+      documentName = documentName.concat(randomNum);
 
       let tablesArray = [];
 
@@ -128,6 +114,18 @@ const AppFunc = function() {
       });
     }
 
+    //DELETING A RESERVATION
+    
+    const deleteAReservation = function(date) {
+
+      db.collection("reservations").doc(date).delete().then(function() {
+        console.log("Document successfully deleted!");
+      }).catch(function(error) {
+        console.error("Error removing document: ", error);
+      });
+    
+    }
+
     //SETTIN A LISTENER ON THE AUTH OBJECT TO MONITOR IF A USER IS LOGGED IN
     firebase.auth().onAuthStateChanged((userrr) => {
         if (userrr) {
@@ -141,13 +139,12 @@ const AppFunc = function() {
 
     // HANDLING LOGGING IN
     const logIn = (email, password) => {
-        console.log('logInAcc');
         firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
           let errorCode = error.code;
           console.log(errorCode);
           //auth/user-not-found
           if (errorCode === 'auth/user-not-found') {
-            console.log('user does not exist');
+            alert('user does not exist');
           }
         });
         showCalendar();
@@ -155,7 +152,6 @@ const AppFunc = function() {
     
     //HANDLING CREATING A NEW ACCOUNT
     const createANewAccount = (email, password) => {
-        console.log('createAcc');
         firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
           let errorCode = error.code;
           let errorMessage = error.message;
@@ -175,12 +171,28 @@ const AppFunc = function() {
       });
     }
 
-    
-    return(
+    let intViewportWidth = window.innerWidth;
+
+    if (intViewportWidth > 500) {
+      return(
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh'
+        }}>
+          <p>
+            Please, view this app via a mobile device simulation. :)
+          </p>
+        </div>
+      )
+    } else {
+      return(
     <div className="App">
-        <ScreenRender addReservation={addReservation} logOut={logOut} showCalendar={showCalendar} createANewAccount={createANewAccount} logIn={logIn}/>
+        <ScreenRender deleteAReservation={deleteAReservation} addReservation={addReservation} logOut={logOut} showCalendar={showCalendar} createANewAccount={createANewAccount} logIn={logIn}/>
     </div>
     );
+    }
 }
 
 export default AppFunc;

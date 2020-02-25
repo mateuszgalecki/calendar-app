@@ -1,0 +1,38 @@
+.your_reservations {
+    p {
+        z-index: 10;
+    }
+    button {
+        z-index: 10;
+    }
+}
+
+.users_reservation {
+    z-index: 10;
+    width: 60%;
+    border: 2px solid #4b636e;
+    margin: 3px 0 3px 0;
+    padding: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    button {
+        z-index: 10;
+        background-color: #81b9bf;
+        border: none;
+        font-size: 0.75rem;
+        outline: none;
+        padding: 3px;
+        border-radius: 5px;
+        margin: 4px 0 4px 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:active {
+            background-color: #78909c;
+            transition: background-color 0.13s ease-out;
+        }
+    }
+}

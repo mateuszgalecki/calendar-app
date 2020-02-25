@@ -1,11 +1,11 @@
 import React from 'react';
 import Day from './Day';
 import './month.scss';
-import { getDay, format, toDate } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionsFunction } from '../index';
 import Restaurant from './Restaurant';
 import YourReservations from './YourReservations';
+import { compareAsc, subDays } from 'date-fns';
 
 function Month(props) {
     let reservationsArray = props.reservations;
@@ -14,15 +14,7 @@ function Month(props) {
     const dispatch = useDispatch();
     let viewedDay = useSelector(state => state.viewDay).value;
     const setViewedDay = actionsFunction().viewDayActions.setViewDay;
-   
-    // const dynamicArray = ["2007", "2008", "2009", "2010"];
-    // const obj = Object.fromEntries(
-    //  dynamicArray.map(year => [year, {
-    //    something: "based",
-    //    on: year
-    //  }])
-    // )
-    // console.log(obj);
+
     
     if (reservationsArray[0] !== undefined && reservationsArray !== undefined) {
         if (reservationsArray[0][0][0] === 0) {
@@ -41,18 +33,15 @@ function Month(props) {
         }
     }
 
-    // if (typeof viewedDay == Object) {
-    //     console.log('should pass data');
-    //     reservationsArray.forEach(day => {
-    //         if (day[0] === viewedDay) {
-    //             dataForDayView = day[1];
-    //         }
-    //     })
-    // }
 
+    const viewDay = function(date, dateToCheck) {
+        let areYouMakingAReservationInThePast = compareAsc(dateToCheck, subDays(new Date(), 1));
+        if (areYouMakingAReservationInThePast < 0) {
+            alert("dont't make the reservation in the past");
+        } else {
+            dispatch(setViewedDay(date));
+        }
 
-    const viewDay = function(date) {
-        dispatch(setViewedDay(date));
     }
 
     const viewYourReservations = function() {
@@ -88,13 +77,13 @@ function Month(props) {
                     })
                 }
             </div>
-            <button onClick={logOut}>log out</button>
-            <button onClick={viewYourReservations}>go to Your reservations</button>
+            <button className='back_button' onClick={logOut}>log out</button>
+            <button className='add_res_button' onClick={viewYourReservations}>go to Your reservations</button>
         </section>
     )
     } else if (viewedDay === 'yourReservations') {
         return(
-            <YourReservations/>
+            <YourReservations deleteAReservation={props.deleteAReservation}/>
         )
     } else {
         let dataToPass = [];

@@ -3,12 +3,19 @@
 }
 
 .temporaryPin {
-    z-index: 10;
+    z-index: 11;
     position: fixed;
     left: 0;
     top: 0;
     padding: 30px;
     display: flex;
+    p, input, button, div {
+        z-index: 10;
+        margin: 3px 0 3px 0;
+    }
+    p:first-child {
+        margin-bottom: 13px;
+    }
 }
 
 .hideMe {

@@ -59,6 +59,7 @@ $primary-font-color: #FFCFAD;
 }
 
 input {
+  position: relative;
   z-index: 10;
   border: none;
   padding: 2px;
@@ -67,6 +68,7 @@ input {
   &:focus {
     background-color: #4b636e;
     color: #b2ebf2;
+    transition: 0.3s ease-out;
     &::placeholder {
       color: #b2ebf2;
     }
@@ -76,6 +78,7 @@ input {
 .fullScreen {
   width: 100vw;
   height: 100vh;
+  max-width: 100%;
   padding: 4%;
   &::before {
     content: '';
@@ -125,4 +128,62 @@ input {
     background-color: #78909c;
     transition: background-color 0.13s ease-out;
   }
+}
+
+.back_button {
+  background-color: #81b9bf;
+  border: none;
+  font-size: 0.75rem;
+  outline: none;
+  padding: 3px;
+  border-radius: 5px;
+  margin: 4px 0 4px 0;
+  z-index: 10;
+  &:active {
+    background-color: #78909c;
+    transition: background-color 0.13s ease-out;
+  }
+}
+
+.add_res_button {
+  background-color: #81b9bf;
+  border: none;
+  font-size: 0.75rem;
+  outline: none;
+  padding: 3px;
+  border-radius: 5px;
+  margin: 0 0 4px 0;
+  &:active {
+    background-color: #78909c;
+    transition: background-color 0.13s ease-out;
+  }
+}
+
+.restaurantView {
+  p {
+    z-index: 10;
+  }
+  div {
+    z-index: 10;
+  }
+  section {
+    z-index: 10;
+  }
+  button {
+    z-index: 10;
+  }
+  input {
+    margin: 3px 0 3px 0;
+  }
+}
+
+.positioning_div {
+  height: 45%;
+}
+
+.welcome_header {
+  z-index: 10;
+  margin-bottom: auto;
+  margin-top: 20px;
+  margin-left: 10px;
 }

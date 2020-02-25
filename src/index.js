@@ -14,7 +14,7 @@ import { combineReducers } from 'redux';
 
 const screenSlice = createSlice({
     name: 'screen',
-    initialState: 'calendar',
+    initialState: 'welcome',
     reducers: {
       welcome: state => state = 'welcome',
       logIn: state => state = 'logIn',
@@ -40,11 +40,15 @@ const userSlice = createSlice({
 const reservationsSlice = createSlice({
     name: 'reservations',
     initialState: { 
-      reservations: []
+      reservations: [],
+      yourReservations: []
     },
     reducers: {
         stateTheState: (state, action) => {
           state.reservations = action.payload;
+        },
+        stateYourReservations: (state, action) => {
+          state.yourReservations = action.payload;
         }
       }
 })

@@ -11,13 +11,9 @@ class CreateAccount extends Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-        console.log(this.props, prevProps);
-    }
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log(this.state.email, this.state.password)
         this.props.createANewAccount(this.state.email, this.state.password);
         // this.props.showCalendar();
     }
@@ -37,13 +33,13 @@ class CreateAccount extends Component {
     render() {
 
         return(
-            <section className={this.props.showMe === 'signIn' ? 'onTheLeft fullScreen primaryView slideLeft' : 'onTheLeft fullScreen primaryView'}>
+            <section className={this.props.showMe === 'signIn' ? 'onTheLeft fullScreen primaryView slideLeft' : 'onTheLeft fullScreen primaryView hideMe'}>
                 <form className='primaryView' onSubmit={this.handleSubmit.bind(this)}>
                     <input onChange={this.handleEmailChange} value={this.state.email} type='email' placeholder='email'></input>
                     <input onChange={this.handlePasswordChange} value={this.state.password} type='text' placeholder='password' className='pushUp'></input>
-                    <input type='submit' value='create a new account' className='pushUp'></input>
+                    <input type='submit' value='create a new account' className='pushUp add_res_button'></input>
                 </form>
-                <button onClick={this.props.goBack}>back</button>
+                <button className='back_button' onClick={this.props.goBack}>back</button>
             </section>
         )
     }
